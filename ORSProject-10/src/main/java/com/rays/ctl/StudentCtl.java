@@ -8,27 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rays.common.BaseCtl;
-import com.rays.common.DropdownList;
 import com.rays.common.ORSResponse;
-import com.rays.dto.RoleDTO;
-import com.rays.dto.UserDTO;
-import com.rays.form.UserForm;
-import com.rays.service.RoleServiceInt;
-import com.rays.service.UserServiceInt;
+import com.rays.dto.CollegeDTO;
+import com.rays.dto.StudentDTO;
+import com.rays.form.StudentForm;
+import com.rays.service.CollegeServiceInt;
+import com.rays.service.StudentServiceInt;
 
 @RestController
-@RequestMapping(value = "User")
-public class UserCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
-
+@RequestMapping(value = "Student")
+public class StudentCtl extends BaseCtl<StudentForm, StudentDTO, StudentServiceInt> {
+	
 	@Autowired
-	RoleServiceInt roleService = null;
+	private CollegeServiceInt collegeService;
 
 	@GetMapping("preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);
-		RoleDTO dto = new RoleDTO();
-		List<DropdownList> list = roleService.search(dto, userContext);
-		res.addResult("roleList", list);
+		List<CollegeDTO> list = collegeService.search(new CollegeDTO(), userContext);
+		res.addResult("collegeList", list);
 		return res;
 	}
+
 }

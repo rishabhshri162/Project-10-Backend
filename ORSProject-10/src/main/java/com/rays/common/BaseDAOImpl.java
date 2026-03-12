@@ -20,16 +20,10 @@ public abstract class BaseDAOImpl<T extends BaseDTO> implements BaseDAOInt<T> {
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
+	public abstract Class<T> getDTOClass();
 
-	public Class<T> getDTOClass(){
-		return null;
-		
-	}
+	protected abstract List<Predicate> getWhereClause(T dto, CriteriaBuilder builder, Root<T> qRoot);
 
-	protected List<Predicate> getWhereClause(T dto, CriteriaBuilder builder, Root<T> qRoot){
-		return null;
-		
-	}
 
 	protected void populate(T dto, UserContext userContext) {
 	}

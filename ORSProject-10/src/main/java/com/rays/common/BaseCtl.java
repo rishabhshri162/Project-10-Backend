@@ -37,7 +37,7 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 		userContext = (UserContext) session.getAttribute("userContext");
 		if (userContext == null) {
 			UserDTO dto = new UserDTO();
-			dto.setLoginId("root@sunilos.com");
+			dto.setLoginId("teamdotdev@gmail.com");
 			userContext = new UserContext(dto);
 		}
 	}

@@ -14,7 +14,7 @@ public class BaseServiceImpl<T extends BaseDTO, D extends BaseDAOInt<T>> impleme
 	@Autowired
 	protected D baseDao;
 
-	@Transactional(readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED)
 	public long add(T dto, UserContext userContext) throws DuplicateRecordException {
 		long pk = baseDao.add(dto, userContext);
 		return pk;
