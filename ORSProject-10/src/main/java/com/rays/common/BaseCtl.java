@@ -53,6 +53,7 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 			Map<String, String> errors = new HashMap<String, String>();
 
 			List<FieldError> list = bindingResult.getFieldErrors();
+
 			list.forEach(e -> {
 				errors.put(e.getField(), e.getDefaultMessage());
 			});
@@ -73,8 +74,12 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 		try {
 			T dto = (T) form.getDto();
 
+			
+			//update method
 			if (dto.getId() != null && dto.getId() > 0) {
+
 				T existDto1 = (T) baseService.findByUniqueKey(dto.getUniqueKey(), dto.getUniqueValue(), userContext);
+
 				if (existDto1 != null && dto.getId() != existDto1.getId()) {
 					res.setSuccess(false);
 					res.addMessage(dto.getLabel() + " already exist");
@@ -83,6 +88,8 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 				baseService.update(dto, userContext);
 				res.addData(dto.getId());
 				res.addMessage(dto.getTableName() + " updated successfully..!!");
+
+				// ADD method
 			} else {
 				if (dto.getUniqueKey() != null && !dto.getUniqueKey().equals("")) {
 					T existDto = (T) baseService.findByUniqueKey(dto.getUniqueKey(), dto.getUniqueValue(), userContext);
@@ -105,10 +112,14 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 
 	@GetMapping("get/{id}")
 	public ORSResponse get(@PathVariable long id) {
+		
 		ORSResponse res = new ORSResponse(true);
+
 		T dto = baseService.findById(id, userContext);
+
 		if (dto != null) {
 			res.addData(dto);
+
 		} else {
 			res.setSuccess(false);
 			res.addMessage("Record not found");
@@ -122,7 +133,9 @@ public class BaseCtl<F extends BaseForm, T extends BaseDTO, S extends BaseServic
 
 		ORSResponse res = new ORSResponse(true);
 		try {
+			
 			for (String id : ids) {
+				
 				baseService.delete(Long.parseLong(id), userContext);
 			}
 
