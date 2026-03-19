@@ -31,7 +31,6 @@ public class RoleCtl extends BaseCtl<RoleForm, RoleDTO, RoleServiceInt> {
 	public ORSResponse get(@PathVariable String name) {
 		ORSResponse res = new ORSResponse(true);
 		RoleDTO dto = baseService.findByName(name, userContext);
-		System.out.println("Role " + dto);
 		if (dto != null) {
 			res.addData(dto);
 		} else {
