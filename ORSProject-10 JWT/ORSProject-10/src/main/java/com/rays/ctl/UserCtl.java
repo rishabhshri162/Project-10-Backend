@@ -55,28 +55,30 @@ public class UserCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 
 	@PostMapping("myProfile")
 	public ORSResponse myProfile(@RequestBody @Valid MyProfileForm form, BindingResult bindingResult) {
+	    ORSResponse res = validate(bindingResult);
+	    if (!res.isSuccess()) {
+	        return res;
+	    }
 
-		ORSResponse res = validate(bindingResult);
+	    System.out.println("UserId from context: " + userContext.getUserId());
+	    UserDTO dto = baseService.findById(userContext.getUserId(), userContext);
+	    System.out.println("DTO found: " + dto);
+	    if (dto == null) {
+	        res.setSuccess(false);
+	        res.addMessage("User not found! Please login again.");
+	        return res;
+	    }
 
-		if (!res.isSuccess()) {
-			return res;
-		}
-
-		UserDTO dto = baseService.findById(userContext.getUserId(), userContext);
-		dto.setFirstName(form.getFirstName());
-		dto.setLastName(form.getLastName());
-		dto.setDob(form.getDob());
-		dto.setPhone(form.getPhone());
-		dto.setGender(form.getGender());
-
-		baseService.update(dto, userContext);
-
-		res.setSuccess(true);
-		res.addMessage("Your Profile updated successfully..!!");
-
-		return res;
+	    dto.setFirstName(form.getFirstName());
+	    dto.setLastName(form.getLastName());
+	    dto.setDob(form.getDob());
+	    dto.setPhone(form.getPhone());
+	    dto.setGender(form.getGender());
+	    baseService.update(dto, userContext);
+	    res.setSuccess(true);
+	    res.addMessage("Your Profile updated successfully..!!");
+	    return res;
 	}
-
 	@PostMapping("changePassword")
 	public ORSResponse changePassword(@RequestBody @Valid ChangePasswordForm form, BindingResult bindingResult) {
 

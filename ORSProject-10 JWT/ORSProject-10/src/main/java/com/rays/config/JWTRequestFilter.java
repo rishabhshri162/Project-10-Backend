@@ -19,6 +19,7 @@ import com.rays.common.UserContext;
 import com.rays.common.UserContextHolder;
 import com.rays.dto.UserDTO;
 import com.rays.service.JWTUserDetailsService;
+import com.rays.service.UserServiceInt;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
@@ -28,6 +29,9 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JWTUserDetailsService jwtUserDetailsService;
+	
+	@Autowired
+	private UserServiceInt userService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -62,13 +66,17 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 				UserDTO dto = new UserDTO();
 				dto.setLoginId(loginId);
 
-//				System.out.println("request filter: " + dto.getLoginId());
+				// ✅ FIX: Database se user fetch karo taaki userId mile
+				UserContext tempContext = new UserContext(dto);
+				UserDTO fullUserDTO = userService.findByLoginId(loginId, tempContext);
 
-				UserContext context = new UserContext(dto);
-
-				// ThreadLocal me set
-				UserContextHolder.setContext(context);
-
+				if (fullUserDTO != null) {
+				    UserContext context = new UserContext(fullUserDTO); // id + loginId dono honge
+				    UserContextHolder.setContext(context);
+				} else {
+				    UserContext context = new UserContext(dto);
+				    UserContextHolder.setContext(context);
+				}
 			} catch (Exception e) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().write("Token is invalid... plz login again..!!");
