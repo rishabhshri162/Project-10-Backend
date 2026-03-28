@@ -19,7 +19,22 @@ import com.rays.common.UserContext;
 import com.rays.common.UserContextHolder;
 import com.rays.dto.UserDTO;
 import com.rays.service.JWTUserDetailsService;
+import com.rays.service.UserServiceInt;
 
+/**
+ * JWTRequestFilter class for handling JWT-based authentication.
+ * 
+ * This filter intercepts every HTTP request and performs:
+ * 
+ * - Extraction of JWT token from Authorization header
+ * - Validation of token
+ * - Authentication setup in Spring Security context
+ * - Setting UserContext for current request
+ * 
+ * It ensures that only authenticated users can access secured APIs.
+ * 
+ * @author Rishabh Shrivastava
+ */
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
 
@@ -28,18 +43,26 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JWTUserDetailsService jwtUserDetailsService;
+	
+	@Autowired
+	private UserServiceInt userService;
 
+	/**
+	 * Filters incoming requests and validates JWT token.
+	 * 
+	 * @param request HTTP request
+	 * @param response HTTP response
+	 * @param filterChain filter chain
+	 * @throws ServletException exception
+	 * @throws IOException exception
+	 */
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
 		final String authorizationHeader = request.getHeader("Authorization");
 
-		System.out.println("JWT Token ======>>>>> " + authorizationHeader);
-
 		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-
-			System.out.println("JWT Token ======>>>>> iiiiinnnnnn");
 
 			String jwtToken = authorizationHeader.substring(7);
 
@@ -66,13 +89,17 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 				UserDTO dto = new UserDTO();
 				dto.setLoginId(loginId);
 
-				System.out.println("request filter: " + dto.getLoginId());
+				// Fetch user from database to get complete details
+				UserContext tempContext = new UserContext(dto);
+				UserDTO fullUserDTO = userService.findByLoginId(loginId, tempContext);
 
-				UserContext context = new UserContext(dto);
-
-				// ThreadLocal me set
-				UserContextHolder.setContext(context);
-
+				if (fullUserDTO != null) {
+				    UserContext context = new UserContext(fullUserDTO);
+				    UserContextHolder.setContext(context);
+				} else {
+				    UserContext context = new UserContext(dto);
+				    UserContextHolder.setContext(context);
+				}
 			} catch (Exception e) {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().write("Token is invalid... plz login again..!!");

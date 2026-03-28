@@ -17,6 +17,20 @@ import com.rays.dto.CourseDTO;
 import com.rays.dto.FacultyDTO;
 import com.rays.dto.SubjectDTO;
 
+/**
+ * Faculty DAO implementation class.
+ * 
+ * This class provides database operations for FacultyDTO.
+ * It extends BaseDAOImpl to reuse common CRUD functionalities.
+ * 
+ * It also populates related fields like collegeName, courseName,
+ * and subjectName based on their respective IDs.
+ * 
+ * Additionally, it defines dynamic search criteria for filtering
+ * faculty records.
+ * 
+ * @author Rishabh Shrivastava
+ */
 @Repository
 public class FacultyDAOImpl extends BaseDAOImpl<FacultyDTO> implements FacultyDAOInt {
 
@@ -29,11 +43,20 @@ public class FacultyDAOImpl extends BaseDAOImpl<FacultyDTO> implements FacultyDA
 	@Autowired
 	SubjectDAOInt subjectDao;
 
+	/**
+	 * Returns FacultyDTO class type.
+	 */
 	@Override
 	public Class<FacultyDTO> getDTOClass() {
 		return FacultyDTO.class;
 	}
 
+	/**
+	 * Populates related entity data like college, course, and subject names.
+	 * 
+	 * @param dto faculty DTO
+	 * @param userContext user context
+	 */
 	@Override
 	protected void populate(FacultyDTO dto, UserContext userContext) {
 
@@ -51,37 +74,39 @@ public class FacultyDAOImpl extends BaseDAOImpl<FacultyDTO> implements FacultyDA
 		}
 	}
 
+	/**
+	 * Builds where clause for dynamic search queries.
+	 * 
+	 * @param dto data object
+	 * @param builder criteria builder
+	 * @param qRoot root entity
+	 * @return list of predicates
+	 */
 	@Override
 	protected List<Predicate> getWhereClause(FacultyDTO dto, CriteriaBuilder builder, Root<FacultyDTO> qRoot) {
 
 		List<Predicate> whereCondition = new ArrayList<Predicate>();
 		
 		if (!isEmptyString(dto.getFirstName())) {
-
 			whereCondition.add(builder.like(qRoot.get("firstName"), dto.getFirstName() + "%"));
 		}
 		
 		if (!isEmptyString(dto.getEmail())) {
-
 			whereCondition.add(builder.like(qRoot.get("email"), dto.getEmail() + "%"));
 		}
 
 		if (!isEmptyString(dto.getCollegeName())) {
-
 			whereCondition.add(builder.like(qRoot.get("collegeName"), dto.getCollegeName() + "%"));
 		}
 
 		if (!isEmptyString(dto.getCourseName())) {
-
 			whereCondition.add(builder.like(qRoot.get("courseName"), dto.getCourseName() + "%"));
 		}
 
 		if (!isEmptyString(dto.getSubjectName())) {
-
 			whereCondition.add(builder.like(qRoot.get("subjectName"), dto.getSubjectName() + "%"));
 		}
 
 		return whereCondition;
 	}
-
 }

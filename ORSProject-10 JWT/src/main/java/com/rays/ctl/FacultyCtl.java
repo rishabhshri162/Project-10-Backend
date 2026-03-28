@@ -20,6 +20,19 @@ import com.rays.service.CourseServiceInt;
 import com.rays.service.FacultyServiceInt;
 import com.rays.service.SubjectServiceInt;
 
+/**
+ * Faculty Controller class for handling Faculty-related APIs.
+ * 
+ * This controller extends BaseCtl to reuse common CRUD operations
+ * such as save, get, delete, and search.
+ * 
+ * It also provides preload API to fetch dropdown data like
+ * course, subject, and college list.
+ * 
+ * URL Mapping: /Faculty
+ * 
+ * @author Rishabh Shrivastava
+ */
 @RestController
 @RequestMapping(value = "Faculty")
 public class FacultyCtl extends BaseCtl<FacultyForm, FacultyDTO, FacultyServiceInt> {
@@ -33,16 +46,23 @@ public class FacultyCtl extends BaseCtl<FacultyForm, FacultyDTO, FacultyServiceI
 	@Autowired
 	private CollegeServiceInt collegeService;
 
+	/**
+	 * Loads dropdown data for Faculty form.
+	 * 
+	 * @return ORSResponse containing course, subject, and college lists
+	 */
 	@GetMapping("/preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);
+
 		List<DropdownList> courseList = courseService.search(new CourseDTO(), userContext);
 		List<DropdownList> subjectList = subjectService.search(new SubjectDTO(), userContext);
 		List<DropdownList> collegeList = collegeService.search(new CollegeDTO(), userContext);
+
 		res.addResult("courseList", courseList);
 		res.addResult("subjectList", subjectList);
 		res.addResult("collegeList", collegeList);
+
 		return res;
 	}
-
 }

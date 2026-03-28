@@ -14,10 +14,29 @@ import com.rays.dto.RoleDTO;
 import com.rays.form.RoleForm;
 import com.rays.service.RoleServiceInt;
 
+/**
+ * Role Controller class for handling Role-related APIs.
+ * 
+ * This controller extends BaseCtl to reuse common CRUD operations
+ * such as save, get, delete, and search.
+ * 
+ * It also provides additional APIs for:
+ * - Loading role dropdown list
+ * - Finding role by name
+ * 
+ * URL Mapping: /Role
+ * 
+ * @author Rishabh Shrivastava
+ */
 @RestController
 @RequestMapping(value = "Role")
 public class RoleCtl extends BaseCtl<RoleForm, RoleDTO, RoleServiceInt> {
 	
+	/**
+	 * Loads role list for dropdown.
+	 * 
+	 * @return ORSResponse containing role list
+	 */
 	@GetMapping("preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);
@@ -27,6 +46,12 @@ public class RoleCtl extends BaseCtl<RoleForm, RoleDTO, RoleServiceInt> {
 		return res;
 	}
 	
+	/**
+	 * Finds role by name.
+	 * 
+	 * @param name role name
+	 * @return ORSResponse with role data
+	 */
 	@GetMapping("name/{name}")
 	public ORSResponse get(@PathVariable String name) {
 		ORSResponse res = new ORSResponse(true);
@@ -39,7 +64,4 @@ public class RoleCtl extends BaseCtl<RoleForm, RoleDTO, RoleServiceInt> {
 		}
 		return res;
 	}
-	
-	
-
 }

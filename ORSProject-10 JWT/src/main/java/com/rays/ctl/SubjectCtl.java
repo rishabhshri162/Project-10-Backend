@@ -16,13 +16,30 @@ import com.rays.form.SubjectForm;
 import com.rays.service.CourseServiceInt;
 import com.rays.service.SubjectServiceInt;
 
+/**
+ * Subject Controller class for handling Subject-related APIs.
+ * 
+ * This controller extends BaseCtl to reuse common CRUD operations
+ * such as save, get, delete, and search.
+ * 
+ * It also provides preload API to fetch course list for dropdown.
+ * 
+ * URL Mapping: /Subject
+ * 
+ * @author Rishabh Shrivastava
+ */
 @RestController
 @RequestMapping(value = "Subject")
 public class SubjectCtl extends BaseCtl<SubjectForm, SubjectDTO, SubjectServiceInt> {
+
 	@Autowired
 	private CourseServiceInt courseService;
 	
-	
+	/**
+	 * Loads course list for dropdown.
+	 * 
+	 * @return ORSResponse containing course list
+	 */
 	@GetMapping("/preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);
@@ -30,5 +47,4 @@ public class SubjectCtl extends BaseCtl<SubjectForm, SubjectDTO, SubjectServiceI
 		res.addResult("courseList", list);
 		return res;
 	}
-
 }

@@ -15,6 +15,18 @@ import com.rays.form.StudentForm;
 import com.rays.service.CollegeServiceInt;
 import com.rays.service.StudentServiceInt;
 
+/**
+ * Student Controller class for handling Student-related APIs.
+ * 
+ * This controller extends BaseCtl to reuse common CRUD operations
+ * such as save, get, delete, and search.
+ * 
+ * It also provides preload API to fetch college list for dropdown.
+ * 
+ * URL Mapping: /Student
+ * 
+ * @author Rishabh Shrivastava
+ */
 @RestController
 @RequestMapping(value = "Student")
 public class StudentCtl extends BaseCtl<StudentForm, StudentDTO, StudentServiceInt> {
@@ -22,6 +34,11 @@ public class StudentCtl extends BaseCtl<StudentForm, StudentDTO, StudentServiceI
 	@Autowired
 	private CollegeServiceInt collegeService;
 
+	/**
+	 * Loads college list for dropdown.
+	 * 
+	 * @return ORSResponse containing college list
+	 */
 	@GetMapping("preload")
 	public ORSResponse preload() {
 		ORSResponse res = new ORSResponse(true);
@@ -29,5 +46,4 @@ public class StudentCtl extends BaseCtl<StudentForm, StudentDTO, StudentServiceI
 		res.addResult("collegeList", list);
 		return res;
 	}
-
 }

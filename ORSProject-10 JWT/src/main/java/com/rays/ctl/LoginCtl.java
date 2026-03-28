@@ -23,6 +23,20 @@ import com.rays.form.UserForm;
 import com.rays.form.UserRegistrationForm;
 import com.rays.service.UserServiceInt;
 
+/**
+ * Authentication Controller for handling login, signup, logout,
+ * and password-related operations.
+ * 
+ * This controller provides APIs for:
+ * - User login with JWT token generation
+ * - User registration (sign up)
+ * - Logout (session invalidation)
+ * - Forget password functionality
+ * 
+ * URL Mapping: /Auth
+ * 
+ * @author Rishabh Shrivastava
+ */
 @RestController
 @RequestMapping(value = "Auth")
 public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
@@ -30,6 +44,14 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 	@Autowired
 	private JWTUtil jwtUtil;
 
+	/**
+	 * Authenticates user and generates JWT token.
+	 * 
+	 * @param form login form data
+	 * @param bindingResult validation result
+	 * @return ORSResponse with user data and token
+	 * @throws Exception if error occurs
+	 */
 	@PostMapping("login")
 	public ORSResponse login(@RequestBody @Valid LoginForm form, BindingResult bindingResult) throws Exception {
 
@@ -62,6 +84,13 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 		return res;
 	}
 	
+	/**
+	 * Registers a new user.
+	 * 
+	 * @param form registration form data
+	 * @param bindingResult validation result
+	 * @return ORSResponse with registration status
+	 */
 	@PostMapping("signUp")
 	public ORSResponse signUp(@RequestBody @Valid UserRegistrationForm form, BindingResult bindingResult) {
 
@@ -98,6 +127,13 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 		return res;
 	}
 
+	/**
+	 * Logs out user by invalidating session.
+	 * 
+	 * @param session HTTP session
+	 * @return ORSResponse with logout message
+	 * @throws Exception if error occurs
+	 */
 	@GetMapping("logout")
 	public ORSResponse logout(HttpSession session) throws Exception {
 
@@ -110,6 +146,13 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 		return res;
 	}
 
+	/**
+	 * Handles forgot password functionality.
+	 * 
+	 * @param form forget password form
+	 * @param bindingResult validation result
+	 * @return ORSResponse with status message
+	 */
 	@PostMapping("forgetPassword")
 	public ORSResponse forgetPassword(@RequestBody @Valid ForgetPasswordForm form, BindingResult bindingResult) {
 
