@@ -49,7 +49,7 @@ public interface UserServiceInt extends BaseServiceInt<UserDTO> {
 	 * @param loginId the loginId of the user
 	 * @return UserDTO if user exists, otherwise null
 	 */
-	public UserDTO forgotPassword(String loginId);
+	public boolean forgotPassword(String loginId);
 
 	/**
 	 * Changes user password.

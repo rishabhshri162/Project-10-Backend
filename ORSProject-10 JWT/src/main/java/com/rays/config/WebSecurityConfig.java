@@ -14,11 +14,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * 
  * This class defines security rules for the application such as:
  * 
- * - Disabling CSRF protection
- * - Allowing public access to specific endpoints
- * - Securing all other endpoints
- * - Enabling stateless session management (JWT आधारित)
- * - Adding JWT filter before authentication filter
+ * - Disabling CSRF protection - Allowing public access to specific endpoints -
+ * Securing all other endpoints - Enabling stateless session management (JWT
+ * आधारित) - Adding JWT filter before authentication filter
  * 
  * It ensures that APIs are protected using JWT authentication.
  * 
@@ -40,12 +38,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-				.authorizeRequests()
-				.antMatchers("/Auth/**", "/User/profilePic/**").permitAll()
-				.anyRequest().authenticated()
-				.and()
-				.sessionManagement()
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/Auth/**", "/User/profilePic/**")
+				.permitAll().anyRequest().authenticated().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

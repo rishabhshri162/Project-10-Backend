@@ -24,14 +24,12 @@ import com.rays.form.UserRegistrationForm;
 import com.rays.service.UserServiceInt;
 
 /**
- * Authentication Controller for handling login, signup, logout,
- * and password-related operations.
+ * Authentication Controller for handling login, signup, logout, and
+ * password-related operations.
  * 
- * This controller provides APIs for:
- * - User login with JWT token generation
- * - User registration (sign up)
- * - Logout (session invalidation)
- * - Forget password functionality
+ * This controller provides APIs for: - User login with JWT token generation -
+ * User registration (sign up) - Logout (session invalidation) - Forget password
+ * functionality
  * 
  * URL Mapping: /Auth
  * 
@@ -40,14 +38,17 @@ import com.rays.service.UserServiceInt;
 @RestController
 @RequestMapping(value = "Auth")
 public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
-	
+
 	@Autowired
 	private JWTUtil jwtUtil;
+
+	@Autowired
+	private UserServiceInt userService;
 
 	/**
 	 * Authenticates user and generates JWT token.
 	 * 
-	 * @param form login form data
+	 * @param form          login form data
 	 * @param bindingResult validation result
 	 * @return ORSResponse with user data and token
 	 * @throws Exception if error occurs
@@ -83,11 +84,11 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Registers a new user.
 	 * 
-	 * @param form registration form data
+	 * @param form          registration form data
 	 * @param bindingResult validation result
 	 * @return ORSResponse with registration status
 	 */
@@ -149,7 +150,7 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 	/**
 	 * Handles forgot password functionality.
 	 * 
-	 * @param form forget password form
+	 * @param form          forget password form
 	 * @param bindingResult validation result
 	 * @return ORSResponse with status message
 	 */
@@ -161,18 +162,16 @@ public class LoginCtl extends BaseCtl<UserForm, UserDTO, UserServiceInt> {
 		if (!res.isSuccess()) {
 			return res;
 		}
+		boolean flag = userService.forgotPassword(form.getLoginId());
 
-		UserDTO fDto = baseService.forgotPassword(form.getLoginId());
-
-		if (fDto == null) {
-			res.setSuccess(false);
-			res.addMessage("LoginId / Email not found.");
-			return res;
-		} else {
+		if (flag == true) {
 			res.setSuccess(true);
-			res.addMessage("Hello " + fDto.getFirstName() + " " + fDto.getLastName()
-					+ "..! Your password has been sent on your email.");
+			res.addMessage("Password sent to your email");
+		} else {
+			res.setSuccess(false);
+			res.addMessage("Login Id not found");
 		}
+
 		return res;
 	}
 }

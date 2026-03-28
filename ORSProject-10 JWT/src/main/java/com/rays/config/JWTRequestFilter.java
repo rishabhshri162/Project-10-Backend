@@ -88,6 +88,7 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
 				UserDTO dto = new UserDTO();
 				dto.setLoginId(loginId);
+				  UserContextHolder.setContext(new UserContext(dto));
 
 				// Fetch user from database to get complete details
 				UserContext tempContext = new UserContext(dto);
