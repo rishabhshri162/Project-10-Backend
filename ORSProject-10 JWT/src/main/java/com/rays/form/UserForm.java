@@ -14,15 +14,21 @@ import com.rays.dto.UserDTO;
 public class UserForm extends BaseForm {
 
 	@NotEmpty(message = "First Name is required")
+	@Pattern(regexp = "^[A-Za-z]+$", message = "First Name must contain only alphabets")
 	private String firstName;
 
 	@NotEmpty(message = "Last Name is required")
+	@Pattern(regexp = "^[A-Za-z]+$", message = "Last Name must contain only alphabets")
 	private String lastName;
 
 	@NotEmpty(message = "Login Id is required")
 	private String loginId;
 
 	@NotEmpty(message = "Password is required")
+	@Pattern(
+	    regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,12}$",
+	    message = "Password does not match required criteria"
+	)
 	private String password;
 
 	@NotNull(message = "Role is required")

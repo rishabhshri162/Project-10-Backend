@@ -10,9 +10,11 @@ import javax.validation.constraints.Pattern;
 public class UserRegistrationForm {
 
 	@NotEmpty(message = "First Name is required")
+	@Pattern(regexp = "^[A-Za-z]+$", message = "First Name must contain only alphabets")
 	private String firstName;
 
 	@NotEmpty(message = "Last Name is required")
+	@Pattern(regexp = "^[A-Za-z]+$", message = "Last Name must contain only alphabets")
 	private String lastName;
 
 	@Email
@@ -20,6 +22,7 @@ public class UserRegistrationForm {
 	private String loginId;
 
 	@NotEmpty(message = "Password is required")
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,12}$", message = "Password does not match required criteria")
 	private String password;
 
 	@NotNull(message = "Date of birth is required")
